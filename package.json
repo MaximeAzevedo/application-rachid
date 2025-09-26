@@ -1,6 +1,7 @@
 {
   "name": "application-rachid",
   "version": "0.1.0",
+  "description": "Application CSCBM Vie Scolaire - Version Production",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
