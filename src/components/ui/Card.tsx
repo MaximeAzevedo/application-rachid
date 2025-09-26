@@ -23,7 +23,7 @@ export function Card({
   children,
   className,
   variant = 'default',
-  padding = 'md',
+  // padding = 'md', // Non utilisé pour l'instant
   hover = true,
   ...props
 }: CardProps) {

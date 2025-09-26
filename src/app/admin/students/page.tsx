@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
 
 import { REAL_CLASSES_DATA } from '@/data/classes';
 import { 
@@ -38,11 +37,7 @@ interface Student {
   class_id: string;
 }
 
-interface AttendanceRecord {
-  date: string;
-  status: 'present' | 'absent_justified' | 'absent_unjustified';
-  note?: string;
-}
+// Interface AttendanceRecord déplacée dans lib/attendance.ts
 
 // Interface StudentStats déplacée dans lib/attendance.ts
 

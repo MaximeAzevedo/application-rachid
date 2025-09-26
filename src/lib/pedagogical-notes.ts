@@ -230,7 +230,7 @@ export async function generateSamplePedagogicalNotes(): Promise<void> {
       return; // Il y a déjà des données
     }
   } catch (error) {
-    console.warn('Erreur vérification Supabase, utilisation localStorage');
+    console.warn('Erreur vérification Supabase, utilisation localStorage:', error);
   }
 
   // Nettoyer les anciennes données localStorage avec les anciens IDs

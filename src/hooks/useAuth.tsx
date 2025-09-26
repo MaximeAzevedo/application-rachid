@@ -16,7 +16,7 @@ interface AuthContextType {
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: Error | null }>;
   signOut: () => Promise<void>;
-  signUp: (email: string, password: string, fullName?: string) => Promise<{ error?: Error | null }>;
+  signUp: () => Promise<{ error?: Error | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -62,12 +62,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else {
         return { error: new Error('Identifiants invalides') };
       }
-    } catch (error) {
+    } catch {
       return { error: new Error('Erreur de connexion') };
     }
   };
 
-  const signUp = async (_email: string, _password: string, _fullName?: string) => {
+  const signUp = async () => {
     // Pour l'instant, pas d'inscription
     return { error: new Error('Inscription non disponible') };
   };

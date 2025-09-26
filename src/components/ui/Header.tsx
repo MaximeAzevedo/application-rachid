@@ -1,7 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, LogOut, User, Settings, Menu } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowLeft, LogOut } from 'lucide-react';
 
 interface HeaderProps {
   title: string;
@@ -66,10 +67,12 @@ export function Header({
               {/* Logo CSCBM */}
               <div className="flex-shrink-0">
                 <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
-                  <img 
+                  <Image 
                     src="/logo-cscbm.png" 
                     alt="Logo CSCBM"
-                    className="w-24 h-24 lg:w-32 lg:h-32 object-contain"
+                    width={128}
+                    height={128}
+                    className="object-contain"
                   />
                 </div>
               </div>

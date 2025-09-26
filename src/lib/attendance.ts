@@ -101,7 +101,21 @@ export async function getAttendanceData(): Promise<AttendanceSession[]> {
     // Convertir les données Supabase en format AttendanceSession
     const sessionsMap = new Map<string, AttendanceSession>();
 
-    attendanceData?.forEach((record: any) => {
+    attendanceData?.forEach((record: { 
+      date: string; 
+      class_id: string; 
+      student_id: string; 
+      present: boolean; 
+      notes?: string;
+      classes: {
+        class_name: string;
+        teacher_name: string;
+      };
+      students: {
+        first_name: string;
+        last_name: string;
+      };
+    }) => {
       const sessionId = `session-${record.date}-${record.class_id}`;
       
       if (!sessionsMap.has(sessionId)) {

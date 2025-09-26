@@ -50,7 +50,7 @@ export function getLevelBadgeStyle(level: number): { background: string; color: 
 /**
  * Débounce function pour optimiser les performances
  */
-export function debounce<T extends (...args: any[]) => void>(
+export function debounce<T extends (...args: unknown[]) => void>(
   func: T,
   waitFor: number
 ): (...args: Parameters<T>) => void {
