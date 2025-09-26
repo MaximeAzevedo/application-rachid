@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 
 export default function LoginPage() {
@@ -37,10 +38,12 @@ export default function LoginPage() {
             <div className="relative mx-auto w-64 h-64 mb-8">
               {/* Logo officiel CSCBM */}
               <div className="w-64 h-64 rounded-full bg-white flex items-center justify-center shadow-2xl border-4 border-green-200 relative overflow-hidden">
-                <img 
+                <Image 
                   src="/logo-cscbm.png" 
                   alt="Logo CSCBM"
-                  className="w-60 h-60 object-contain"
+                  width={240}
+                  height={240}
+                  className="object-contain"
                 />
               </div>
             </div>

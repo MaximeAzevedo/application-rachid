@@ -9,7 +9,6 @@ import {
   Users, 
   Trash2, 
   Plus, 
-  ArrowLeft,
   Search,
   Filter,
   BarChart3,
@@ -45,14 +44,7 @@ interface AttendanceRecord {
   note?: string;
 }
 
-interface StudentStats {
-  total_sessions: number;
-  present: number;
-  absent_justified: number;
-  absent_unjustified: number;
-  attendance_rate: number;
-  history: AttendanceRecord[];
-}
+// Interface StudentStats déplacée dans lib/attendance.ts
 
 interface StudentFormData {
   first_name: string;
@@ -693,7 +685,6 @@ export default function AdminStudentsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClass, setSelectedClass] = useState<string>('all');
   const [availableClasses, setAvailableClasses] = useState<Array<{id: string; class_name: string; level: number; day: string}>>([]);
-  const router = useRouter();
 
   useEffect(() => {
     // Générer des données d'exemple si nécessaire (pour la démo)

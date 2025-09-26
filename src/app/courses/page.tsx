@@ -10,7 +10,6 @@ import { supabase } from '@/lib/supabase';
 export default function CoursesPage() {
   const { user, loading } = useAuth();
   const [classes, setClasses] = useState(REAL_CLASSES_DATA);
-  const [classesLoading, setClassesLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -56,8 +55,6 @@ export default function CoursesPage() {
       } catch (error) {
         console.error('Erreur lors du chargement des classes:', error);
         setClasses(REAL_CLASSES_DATA);
-      } finally {
-        setClassesLoading(false);
       }
     };
 

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { REAL_CLASSES_DATA } from '@/data/classes';
-import { Edit3, Users, FileText, Trash2, Plus, ArrowLeft } from 'lucide-react';
+import { Edit3, Users, FileText, Trash2, Plus } from 'lucide-react';
 import { Header } from '@/components/ui/Header';
 import { supabase } from '@/lib/supabase';
 
