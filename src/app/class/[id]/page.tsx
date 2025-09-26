@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Button } from '@/components/ui/Button';
+import { Button as UIButton } from '@/components/ui/Button';
 import { REAL_CLASSES_DATA } from '@/data/classes';
 import { saveAttendanceSession, type AttendanceSession } from '@/lib/attendance';
 import { savePedagogicalNote, getStudentPedagogicalNotes, updatePedagogicalNote, deletePedagogicalNote, type CreateNoteData, type PedagogicalNote } from '@/lib/pedagogical-notes';
@@ -85,12 +85,12 @@ function JustificationModal({
         </div>
 
         <div className="flex gap-2">
-          <Button variant="ghost" onClick={onClose} className="flex-1">
+          <UIButton variant="ghost" onClick={onClose} className="flex-1">
             Annuler
-          </Button>
-          <Button onClick={handleSave} className="flex-1">
+          </UIButton>
+          <UIButton onClick={handleSave} className="flex-1">
             Valider
-          </Button>
+          </UIButton>
         </div>
       </div>
     </div>
@@ -278,20 +278,20 @@ function PedagogicalNoteModal({
 
                 <div className="flex gap-2">
           {selectedNote && (
-            <Button variant="ghost" onClick={handleCancelEdit} className="flex-1">
+            <UIButton variant="ghost" onClick={handleCancelEdit} className="flex-1">
               Annuler modification
-            </Button>
+            </UIButton>
           )}
-          <Button variant="ghost" onClick={onClose} className={selectedNote ? "flex-1" : "flex-1"}>
+          <UIButton variant="ghost" onClick={onClose} className={selectedNote ? "flex-1" : "flex-1"}>
             Fermer
-          </Button>
-          <Button 
+          </UIButton>
+          <UIButton 
             onClick={handleSave}
             disabled={!content.trim()}
             className="flex-1"
           >
             {selectedNote ? 'Modifier' : 'Ajouter'}
-          </Button>
+          </UIButton>
         </div>
         </div>
       </div>
@@ -582,9 +582,9 @@ export default function ClassAttendancePage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-muted-foreground mb-4">Classe non trouvée</p>
-          <Button onClick={() => router.push('/dashboard')}>
+          <UIButton onClick={() => router.push('/dashboard')}>
             Retour au dashboard
-          </Button>
+          </UIButton>
         </div>
       </div>
     );
