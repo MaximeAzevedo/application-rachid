@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { REAL_CLASSES_DATA } from '@/data/classes';
-import { Edit3, Users, FileText, Trash2, Plus } from 'lucide-react';
+import { Edit3, Users, FileText, Trash2, Plus, X } from 'lucide-react';
 import { Header } from '@/components/ui/Header';
 import { supabase } from '@/lib/supabase';
 
@@ -72,7 +72,17 @@ function ClassModal({
     <div className="modal-mobile-container">
       <div className="modal-mobile-content medium">
         <div className="modal-mobile-padding">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">{title}</h2>
+          <div className="modal-mobile-header">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
+              <button
+                onClick={onClose}
+                className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
           
           <form onSubmit={handleSubmit} className="modal-mobile-form">
             <div className="modal-mobile-grid">
@@ -155,7 +165,7 @@ function ClassModal({
               />
             </div>
             
-            <div className="flex gap-4 pt-4">
+            <div className="modal-mobile-buttons">
               <button
                 type="submit"
                 className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl text-lg"
@@ -341,12 +351,12 @@ export default function AdminClassesPage() {
 
   const handleDeleteClass = async (id: string) => {
     const classToDelete = classes.find(c => c.id === id);
-    if (classToDelete && classToDelete.student_count > 0) {
-      alert(`Impossible de supprimer la classe ${classToDelete.class_name} : elle contient ${classToDelete.student_count} élèves.`);
-      return;
-    }
     
-    if (confirm('Êtes-vous sûr de vouloir supprimer cette classe ?')) {
+    const message = classToDelete && classToDelete.student_count > 0
+      ? `⚠️ ATTENTION : Cette classe contient ${classToDelete.student_count} élève(s).\n\nÊtes-vous sûr de vouloir supprimer la classe ${classToDelete.class_name} ?\n\nLes élèves devront être réassignés à une autre classe.`
+      : 'Êtes-vous sûr de vouloir supprimer cette classe ?';
+    
+    if (confirm(message)) {
       try {
         const { error } = await supabase
           .from('classes')
@@ -449,56 +459,61 @@ export default function AdminClassesPage() {
                 <div className="space-y-4">
                   {dayClasses.map((classItem) => (
                     <div key={classItem.id} className="card-premium">
-                      <div className="p-6">
-                        <div className="flex justify-between items-start">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-4 mb-3">
-                              <h3 className="text-xl font-bold text-gray-900">
+                      <div className="p-4 sm:p-6">
+                        <div className="flex flex-col gap-4">
+                          {/* Section cliquable pour modifier */}
+                          <div 
+                            className="flex-1 cursor-pointer group"
+                            onClick={() => handleEditClass(classItem)}
+                          >
+                            <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3">
+                              <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-green-600 transition-colors">
                                 Classe {classItem.class_name} - Niveau {classItem.level}
                               </h3>
-                              <span 
-                                className="badge-level px-3 py-1 rounded-full text-sm font-semibold"
-                                style={{
-                                  background: `var(--green-${Math.min(classItem.level * 100 + 100, 400)})`,
-                                  color: `var(--green-${Math.min(classItem.level * 100 + 700, 900)})`
-                                }}
-                              >
+                              <span className="bg-green-100 text-green-700 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap">
                                 {classItem.student_count} élèves
                               </span>
                             </div>
-                            <p className="text-gray-600 text-base">
+                            <p className="text-gray-600 text-sm sm:text-base mb-2">
                               {classItem.teacher_name} • {classItem.room}
                             </p>
+                            <p className="text-xs text-gray-400 flex items-center gap-1">
+                              <Edit3 className="w-3 h-3" />
+                              <span>Cliquer pour modifier</span>
+                            </p>
                           </div>
-                          <div className="flex gap-3">
+                          
+                          {/* Boutons d'action */}
+                          <div className="flex flex-col sm:flex-row gap-2">
                             <button
-                              onClick={() => router.push(`/class/${classItem.id}`)}
-                              className="btn-modern btn-secondary flex items-center gap-2 text-sm h-12"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(`/class/${classItem.id}`);
+                              }}
+                              className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2"
                             >
                               <FileText className="w-4 h-4" />
-                              Faire l&apos;appel
+                              <span>Faire l&apos;appel</span>
                             </button>
                             <button
-                              onClick={() => router.push(`/admin/students`)}
-                              className="btn-modern btn-secondary flex items-center gap-2 text-sm h-12"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(`/admin/students`);
+                              }}
+                              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2"
                             >
                               <Users className="w-4 h-4" />
-                              Voir élèves
+                              <span>Voir élèves</span>
                             </button>
                             <button
-                              onClick={() => handleEditClass(classItem)}
-                              className="btn-modern bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 text-sm h-12"
-                            >
-                              <Edit3 className="w-4 h-4" />
-                              Modifier
-                            </button>
-                            <button
-                              onClick={() => handleDeleteClass(classItem.id)}
-                              className="btn-modern bg-red-600 hover:bg-red-700 text-white flex items-center gap-2 text-sm h-12"
-                              disabled={classItem.student_count > 0}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteClass(classItem.id);
+                              }}
+                              className="sm:w-auto bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2"
                             >
                               <Trash2 className="w-4 h-4" />
-                              Supprimer
+                              <span>Supprimer</span>
                             </button>
                           </div>
                         </div>

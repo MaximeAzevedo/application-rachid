@@ -588,20 +588,30 @@ function AddStudentModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="card-premium max-w-lg w-full">
-        <div className="p-8">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-              <Plus className="w-6 h-6 text-green-600" />
+    <div className="modal-mobile-container">
+      <div className="modal-mobile-content medium">
+        <div className="modal-mobile-padding">
+          <div className="modal-mobile-header">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                  <Plus className="w-6 h-6 text-green-600" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Ajouter un nouvel élève
+                </h2>
+              </div>
+              <button
+                onClick={onClose}
+                className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">
-              Ajouter un nouvel élève
-            </h2>
           </div>
           
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="modal-mobile-form">
+            <div className="modal-mobile-grid">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Prénom
@@ -649,7 +659,7 @@ function AddStudentModal({
               </select>
             </div>
 
-            <div className="flex gap-4 pt-4">
+            <div className="modal-mobile-buttons">
               <button
                 type="submit"
                 className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl text-lg"
