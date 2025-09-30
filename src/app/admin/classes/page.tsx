@@ -460,57 +460,40 @@ export default function AdminClassesPage() {
                   {dayClasses.map((classItem) => (
                     <div key={classItem.id} className="card-premium">
                       <div className="p-4 sm:p-6">
-                        <div className="flex flex-col gap-4">
-                          {/* Section cliquable pour modifier */}
-                          <div 
-                            className="flex-1 cursor-pointer group"
-                            onClick={() => handleEditClass(classItem)}
-                          >
-                            <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3">
-                              <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-green-600 transition-colors">
+                        <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
+                          {/* Informations de la classe */}
+                          <div className="flex-1">
+                            <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-2">
+                              <h3 className="text-lg sm:text-xl font-bold text-gray-900">
                                 Classe {classItem.class_name} - Niveau {classItem.level}
                               </h3>
                               <span className="bg-green-100 text-green-700 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap">
                                 {classItem.student_count} élèves
                               </span>
                             </div>
-                            <p className="text-gray-600 text-sm sm:text-base mb-2">
+                            <p className="text-gray-600 text-sm sm:text-base">
                               {classItem.teacher_name} • {classItem.room}
-                            </p>
-                            <p className="text-xs text-gray-400 flex items-center gap-1">
-                              <Edit3 className="w-3 h-3" />
-                              <span>Cliquer pour modifier</span>
                             </p>
                           </div>
                           
                           {/* Boutons d'action */}
-                          <div className="flex flex-col sm:flex-row gap-2">
+                          <div className="flex gap-2 sm:flex-shrink-0">
                             <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                router.push(`/class/${classItem.id}`);
-                              }}
-                              className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2"
+                              type="button"
+                              onClick={() => handleEditClass(classItem)}
+                              className="flex-1 sm:flex-initial bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2 min-h-[48px] touch-manipulation"
                             >
-                              <FileText className="w-4 h-4" />
-                              <span>Faire l&apos;appel</span>
+                              <Edit3 className="w-4 h-4" />
+                              <span>Modifier</span>
                             </button>
                             <button
+                              type="button"
                               onClick={(e) => {
-                                e.stopPropagation();
-                                router.push(`/admin/students`);
-                              }}
-                              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2"
-                            >
-                              <Users className="w-4 h-4" />
-                              <span>Voir élèves</span>
-                            </button>
-                            <button
-                              onClick={(e) => {
+                                e.preventDefault();
                                 e.stopPropagation();
                                 handleDeleteClass(classItem.id);
                               }}
-                              className="sm:w-auto bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2"
+                              className="flex-1 sm:flex-initial bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2 min-h-[48px] touch-manipulation"
                             >
                               <Trash2 className="w-4 h-4" />
                               <span>Supprimer</span>

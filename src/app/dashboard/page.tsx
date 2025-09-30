@@ -101,8 +101,8 @@ export default function DashboardPage() {
 
       <main className="main-content">
         <div className="container-modern">
-          {/* Stats avec vrai vert */}
-          <div className="grid-responsive cols-3 mb-8">
+          {/* Stats avec vrai vert - Masquées sur mobile */}
+          <div className="hidden md:grid grid-responsive cols-3 mb-8">
             <div className="card-stat">
               <div className="text-2xl font-bold text-gradient-green mb-2">{classes.length}</div>
               <div className="text-sm text-muted-foreground">Classes</div>
