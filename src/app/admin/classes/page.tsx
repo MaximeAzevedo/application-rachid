@@ -69,13 +69,13 @@ function ClassModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="card-premium max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-8">
+    <div className="modal-mobile-container">
+      <div className="modal-mobile-content medium">
+        <div className="modal-mobile-padding">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">{title}</h2>
           
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form onSubmit={handleSubmit} className="modal-mobile-form">
+            <div className="modal-mobile-grid">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Jour

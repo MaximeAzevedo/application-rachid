@@ -6,9 +6,9 @@ interface MobileLayoutProps {
 
 export function MobileLayout({ children }: MobileLayoutProps) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen w-full overflow-x-hidden">
       {/* Contenu principal sans navigation bottom */}
-      <main className="min-h-screen">
+      <main className="min-h-screen w-full max-w-full overflow-x-hidden">
         {children}
       </main>
     </div>

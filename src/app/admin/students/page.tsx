@@ -151,10 +151,10 @@ function StudentModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="card-premium max-w-5xl w-full h-[95vh] flex flex-col overflow-hidden">
+    <div className="modal-mobile-container">
+      <div className="modal-mobile-content large flex flex-col overflow-hidden">
           {/* Header */}
-          <div className="p-6 border-b border-gray-200 flex-shrink-0">
+          <div className="modal-mobile-header flex-shrink-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
@@ -523,7 +523,7 @@ function StudentModal({
                 Supprimer l&apos;élève
               </button>
               
-              <div className="flex gap-3">
+              <div className="modal-mobile-buttons">
                 <button
                   onClick={onClose}
                   className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-xl transition-all"

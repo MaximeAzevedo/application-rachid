@@ -51,11 +51,11 @@ function JustificationModal({
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+      className="modal-mobile-container"
       onClick={onClose}
     >
       <div 
-        className="card-premium bg-white max-w-md w-full"
+        className="modal-mobile-content small"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={handleKeyDown}
       >
@@ -85,7 +85,7 @@ function JustificationModal({
           </p>
         </div>
 
-        <div className="flex gap-2">
+        <div className="modal-mobile-buttons">
           <UIButton variant="ghost" onClick={onClose} className="flex-1">
             Annuler
           </UIButton>
@@ -94,6 +94,34 @@ function JustificationModal({
           </UIButton>
         </div>
       </div>
+
+
+
+      {/* Menu contextuel pour l'appel */}
+      {showContextMenu && contextMenuStudent && (
+        <AttendanceContextMenu
+          isOpen={showContextMenu}
+          onClose={() => {
+            setShowContextMenu(false);
+            setContextMenuStudent(null);
+          }}
+          onSelectOption={(option) => {
+            if (option === 'pedagogical') {
+              setShowPedagogicalModal(contextMenuStudent);
+            } else {
+              const statusMap = {
+                'present': 'present',
+                'absent': 'absent_unjustified',
+                'justified': 'absent_justified'
+              };
+              updateStudentStatus(contextMenuStudent.id, statusMap[option]);
+            }
+          }}
+          studentName={`${contextMenuStudent.first_name} ${contextMenuStudent.last_name}`}
+          currentStatus={contextMenuStudent.status}
+          hasPedagogicalNotes={studentPedagogicalNotes[contextMenuStudent.id]?.length > 0}
+        />
+      )}
     </div>
   );
 }
@@ -277,7 +305,7 @@ function PedagogicalNoteModal({
           </p>
         </div>
 
-                <div className="flex gap-2">
+                <div className="modal-mobile-buttons">
           {selectedNote && (
             <UIButton variant="ghost" onClick={handleCancelEdit} className="flex-1">
               Annuler modification
@@ -296,6 +324,27 @@ function PedagogicalNoteModal({
         </div>
         </div>
       </div>
+
+
+
+      {/* Menu contextuel pour l'appel */}
+        <AttendanceContextMenu
+          onClose={() => {
+            setShowContextMenu(false);
+            setContextMenuStudent(null);
+          }}
+          onSelectOption={(option) => {
+            if (option === 'pedagogical') {
+            } else {
+              const statusMap = {
+                'present': 'present',
+                'absent': 'absent_unjustified',
+                'justified': 'absent_justified'
+              };
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -309,6 +358,7 @@ export default function ClassAttendancePage() {
   const [studentPedagogicalNotes, setStudentPedagogicalNotes] = useState<{[key: string]: PedagogicalNote[]}>({});
   const [contextMenuStudent, setContextMenuStudent] = useState<Student | null>(null);
   const [showContextMenu, setShowContextMenu] = useState(false);
+
   const router = useRouter();
   const params = useParams();
   const classId = params.id;
@@ -669,6 +719,11 @@ export default function ClassAttendancePage() {
                       )}
                     </div>
                   </div>
+
+                  {/* Indicateur de clic */}
+                  <div className="text-gray-400 text-sm">
+                    👆 Cliquer pour modifier
+                  </div>
                 </div>
               ))}
             </div>
@@ -744,29 +799,24 @@ export default function ClassAttendancePage() {
               />
             )}
 
+
+
       {/* Menu contextuel pour l'appel */}
-      {showContextMenu && contextMenuStudent && (
         <AttendanceContextMenu
-          isOpen={showContextMenu}
           onClose={() => {
             setShowContextMenu(false);
             setContextMenuStudent(null);
           }}
           onSelectOption={(option) => {
             if (option === 'pedagogical') {
-              setShowPedagogicalModal(contextMenuStudent);
             } else {
-              const statusMap: Record<string, Student['status']> = {
+              const statusMap = {
                 'present': 'present',
                 'absent': 'absent_unjustified',
                 'justified': 'absent_justified'
               };
-              updateStudentStatus(contextMenuStudent.id, statusMap[option]);
             }
           }}
-          studentName={`${contextMenuStudent.first_name} ${contextMenuStudent.last_name}`}
-          currentStatus={contextMenuStudent.status}
-          hasPedagogicalNotes={studentPedagogicalNotes[contextMenuStudent.id]?.length > 0}
         />
       )}
     </div>
