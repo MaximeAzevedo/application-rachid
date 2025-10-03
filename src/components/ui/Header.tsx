@@ -63,10 +63,10 @@ export function Header({
               </button>
             )}
             
-            <div className="min-w-0 flex items-center gap-4">
+            <div className="min-w-0 flex items-center gap-3 lg:gap-4">
               {/* Logo CSCBM */}
               <div className="flex-shrink-0">
-                <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
+                <div className="w-20 h-20 lg:w-40 lg:h-40 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
                   <Image 
                     src="/logo-cscbm.png" 
                     alt="Logo CSCBM"
@@ -78,12 +78,12 @@ export function Header({
               </div>
               
               {/* Titre et sous-titre */}
-              <div className="min-w-0">
-                <h1 className="text-xl lg:text-2xl font-bold truncate">
+              <div className="min-w-0 flex-1">
+                <h1 className="text-lg lg:text-2xl font-bold">
                   {title}
                 </h1>
                 {subtitle && (
-                  <p className="text-sm lg:text-base text-white/80 truncate mt-1">
+                  <p className="text-xs lg:text-base text-white/80 mt-1 line-clamp-2 leading-tight">
                     {subtitle}
                   </p>
                 )}
@@ -118,10 +118,10 @@ export function Header({
                   {onSignOut && (
                     <button
                       onClick={onSignOut}
-                      className="flex items-center justify-center gap-2 px-4 py-3 bg-red-500 hover:bg-red-600 rounded-xl transition-all duration-200 text-sm font-semibold border-2 border-white/30 hover:border-white/50 shadow-lg group min-w-[44px] min-h-[44px]"
+                      className="flex items-center justify-center gap-2 px-3 sm:px-4 py-3 bg-red-600 hover:bg-red-700 rounded-xl transition-all duration-200 text-sm font-semibold border-2 border-red-400 hover:border-red-300 shadow-lg hover:shadow-xl group min-w-[48px] min-h-[48px]"
                       title="Déconnexion"
                     >
-                      <LogOut className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+                      <LogOut className="w-5 h-5 sm:w-5 sm:h-5 group-hover:translate-x-0.5 transition-transform" />
                       <span className="hidden sm:inline">Déconnexion</span>
                     </button>
                   )}

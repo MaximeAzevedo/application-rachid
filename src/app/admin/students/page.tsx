@@ -35,6 +35,7 @@ interface Student {
   last_name: string;
   class_name: string;
   class_id: string;
+  parent_phone?: string;
 }
 
 // Interface AttendanceRecord déplacée dans lib/attendance.ts
@@ -45,6 +46,7 @@ interface StudentFormData {
   first_name: string;
   last_name: string;
   class_id: string;
+  parent_phone?: string;
 }
 
 // Composant Modal unifiée pour un élève (Informations, Statistiques, Suivi Pédagogique)
@@ -67,7 +69,8 @@ function StudentModal({
   const [studentFormData, setStudentFormData] = useState<StudentFormData>({
     first_name: student.first_name,
     last_name: student.last_name,
-    class_id: student.class_id
+    class_id: student.class_id,
+    parent_phone: student.parent_phone || ''
   });
 
   // États pour les données asynchrones
@@ -260,6 +263,26 @@ function StudentModal({
                       </option>
                     ))}
                   </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    📱 Numéro de téléphone du parent (SMS d&apos;absence)
+                  </label>
+                  <input
+                    type="tel"
+                    value={studentFormData.parent_phone || ''}
+                    onChange={(e) => {
+                      // Nettoyer le numéro : enlever les espaces
+                      const cleanedPhone = e.target.value.replace(/\s+/g, '');
+                      setStudentFormData({...studentFormData, parent_phone: cleanedPhone});
+                    }}
+                    placeholder="+33612345678"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-base bg-white hover:border-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all outline-none"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Format international obligatoire : +33612345678 (avec +, sans espaces)
+                  </p>
                 </div>
               </div>
             )}
@@ -561,7 +584,8 @@ function AddStudentModal({
   const [formData, setFormData] = useState<StudentFormData>({
     first_name: '',
     last_name: '',
-    class_id: availableClasses[0]?.id || ''
+    class_id: availableClasses[0]?.id || '',
+    parent_phone: ''
   });
 
   // Mettre à jour le class_id par défaut quand les classes changent
@@ -581,7 +605,8 @@ function AddStudentModal({
     setFormData({
       first_name: '',
       last_name: '',
-      class_id: availableClasses[0]?.id || ''
+      class_id: availableClasses[0]?.id || '',
+      parent_phone: ''
     });
   };
 
@@ -658,6 +683,26 @@ function AddStudentModal({
                 ))}
               </select>
             </div>
+            
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                📱 Numéro de téléphone du parent (optionnel)
+              </label>
+              <input
+                type="tel"
+                value={formData.parent_phone || ''}
+                onChange={(e) => {
+                  // Nettoyer le numéro : enlever les espaces
+                  const cleanedPhone = e.target.value.replace(/\s+/g, '');
+                  setFormData({...formData, parent_phone: cleanedPhone});
+                }}
+                placeholder="+33612345678"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-base bg-white hover:border-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition-all outline-none"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Format international : +33612345678 (pour recevoir les SMS d&apos;absence)
+              </p>
+            </div>
 
             <div className="modal-mobile-buttons">
               <button
@@ -733,7 +778,8 @@ export default function AdminStudentsPage() {
             first_name: student.first_name,
             last_name: student.last_name,
             class_name: student.classes?.class_name || 'Sans classe',
-            class_id: student.class_id || ''
+            class_id: student.class_id || '',
+            parent_phone: student.parent_phone || ''
           })) || [];
           
           setStudents(transformedStudents);
@@ -803,23 +849,32 @@ export default function AdminStudentsPage() {
   const handleSaveStudent = async (formData: StudentFormData) => {
     const selectedClassData = availableClasses.find(c => c.id === formData.class_id);
     
+    console.log('🔄 Sauvegarde élève:', formData);
+    
     try {
       if (selectedStudent) {
         // Modification d'un élève existant dans Supabase
-        const { error } = await supabase
+        console.log('📝 Mise à jour élève ID:', selectedStudent.id);
+        console.log('📱 Numéro parent:', formData.parent_phone);
+        
+        const { data, error } = await supabase
           .from('students')
           .update({
             first_name: formData.first_name,
             last_name: formData.last_name,
-            class_id: formData.class_id
+            class_id: formData.class_id,
+            parent_phone: formData.parent_phone || null
           })
-          .eq('id', selectedStudent.id);
+          .eq('id', selectedStudent.id)
+          .select();
 
         if (error) {
-          console.error('Erreur modification élève:', error);
-          alert('Erreur lors de la modification de l\'élève');
+          console.error('❌ Erreur modification élève:', error);
+          alert('Erreur lors de la modification de l\'élève: ' + error.message);
           return;
         }
+        
+        console.log('✅ Élève mis à jour avec succès:', data);
 
         // Mettre à jour l'état local après succès Supabase
         setStudents(students.map(s => 
@@ -829,7 +884,8 @@ export default function AdminStudentsPage() {
                 first_name: formData.first_name,
                 last_name: formData.last_name,
                 class_id: formData.class_id,
-                class_name: selectedClassData?.class_name || 'Unknown'
+                class_name: selectedClassData?.class_name || 'Unknown',
+                parent_phone: formData.parent_phone
               }
             : s
         ));
@@ -842,7 +898,8 @@ export default function AdminStudentsPage() {
             id: newId,
             first_name: formData.first_name,
             last_name: formData.last_name,
-            class_id: formData.class_id
+            class_id: formData.class_id,
+            parent_phone: formData.parent_phone || null
           })
           .select()
           .single();
@@ -859,7 +916,8 @@ export default function AdminStudentsPage() {
           first_name: newStudentData.first_name,
           last_name: newStudentData.last_name,
           class_id: newStudentData.class_id,
-          class_name: selectedClassData?.class_name || 'Unknown'
+          class_name: selectedClassData?.class_name || 'Unknown',
+          parent_phone: newStudentData.parent_phone
         };
         setStudents([...students, newStudent]);
       }
@@ -1019,7 +1077,7 @@ export default function AdminStudentsPage() {
 
           {/* Liste des Élèves par Classe */}
           <div className="space-y-8">
-            {Object.entries(groupedStudents).map(([className, classStudents]) => (
+            {Object.entries(groupedStudents).sort((a, b) => a[0].localeCompare(b[0])).map(([className, classStudents]) => (
               <div key={className}>
                 <div className="flex items-center gap-4 mb-8">
                   <div className="flex items-center gap-3">
