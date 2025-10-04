@@ -182,7 +182,7 @@ function StudentModal({
             <div className="flex gap-1 mt-6 bg-gray-100 p-1 rounded-lg">
               <button
                 onClick={() => setActiveTab('info')}
-                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+                className={`flex-1 py-2.5 px-3 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap ${
                   activeTab === 'info' 
                     ? 'bg-white text-gray-900 shadow-sm' 
                     : 'text-gray-600 hover:text-gray-900'
@@ -193,7 +193,7 @@ function StudentModal({
               </button>
               <button
                 onClick={() => setActiveTab('stats')}
-                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+                className={`flex-1 py-2.5 px-3 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap ${
                   activeTab === 'stats' 
                     ? 'bg-white text-gray-900 shadow-sm' 
                     : 'text-gray-600 hover:text-gray-900'
@@ -204,7 +204,7 @@ function StudentModal({
               </button>
               <button
                 onClick={() => setActiveTab('follow')}
-                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+                className={`flex-1 py-2.5 px-3 rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap ${
                   activeTab === 'follow' 
                     ? 'bg-white text-gray-900 shadow-sm' 
                     : 'text-gray-600 hover:text-gray-900'
@@ -540,7 +540,7 @@ function StudentModal({
             <div className="flex justify-between">
               <button
                 onClick={() => onDelete(student.id)}
-                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-xl transition-all flex items-center gap-2"
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-5 rounded-xl transition-all flex items-center gap-2 text-sm"
               >
                 <Trash2 className="w-4 h-4" />
                 Supprimer l&apos;élève
@@ -549,14 +549,14 @@ function StudentModal({
               <div className="modal-mobile-buttons">
                 <button
                   onClick={onClose}
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-xl transition-all"
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2.5 px-5 rounded-xl transition-all text-sm"
                 >
                   Fermer
                 </button>
                 {activeTab === 'info' && (
                   <button
                     onClick={handleSaveStudent}
-                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl transition-all flex items-center gap-2"
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 px-5 rounded-xl transition-all flex items-center gap-2 text-sm"
                   >
                     <Edit3 className="w-4 h-4" />
                     Sauvegarder

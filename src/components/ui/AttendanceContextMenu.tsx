@@ -47,7 +47,7 @@ export function AttendanceContextMenu({
           {/* Présent */}
           <button
             onClick={() => handleOptionClick('present')}
-            className={`attendance-option present ${currentStatus === 'present' ? 'bg-green-50' : ''}`}
+            className={`attendance-option present w-full ${currentStatus === 'present' ? 'bg-green-50' : ''}`}
           >
             <div className="attendance-option-icon">✓</div>
             <div className="attendance-option-text">
@@ -59,7 +59,7 @@ export function AttendanceContextMenu({
           {/* Absent */}
           <button
             onClick={() => handleOptionClick('absent')}
-            className={`attendance-option absent ${currentStatus === 'absent_unjustified' ? 'bg-red-50' : ''}`}
+            className={`attendance-option absent w-full ${currentStatus === 'absent_unjustified' ? 'bg-red-50' : ''}`}
           >
             <div className="attendance-option-icon">✗</div>
             <div className="attendance-option-text">
@@ -71,7 +71,7 @@ export function AttendanceContextMenu({
           {/* Absent justifié */}
           <button
             onClick={() => handleOptionClick('justified')}
-            className={`attendance-option justified ${currentStatus === 'absent_justified' ? 'bg-amber-50' : ''}`}
+            className={`attendance-option justified w-full ${currentStatus === 'absent_justified' ? 'bg-amber-50' : ''}`}
           >
             <div className="attendance-option-icon">📝</div>
             <div className="attendance-option-text">
@@ -83,7 +83,7 @@ export function AttendanceContextMenu({
           {/* Note pédagogique */}
           <button
             onClick={() => handleOptionClick('pedagogical')}
-            className="attendance-option pedagogical"
+            className="attendance-option pedagogical w-full"
           >
             <div className="attendance-option-icon">📚</div>
             <div className="attendance-option-text">

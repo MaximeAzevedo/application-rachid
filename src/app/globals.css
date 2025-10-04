@@ -560,8 +560,9 @@ body {
 
 /* Boutons du menu contextuel */
 .attendance-option {
-  @apply flex items-center gap-3 px-4 py-3 text-left transition-colors;
+  @apply flex items-center gap-4 px-5 py-4 text-left transition-colors w-full;
   border-bottom: 1px solid var(--gray-100);
+  min-height: 72px;
 }
 
 .attendance-option:last-child {
@@ -611,7 +612,7 @@ body {
 
 /* Icônes des options */
 .attendance-option-icon {
-  @apply w-8 h-8 rounded-lg flex items-center justify-center text-lg font-semibold;
+  @apply w-10 h-10 rounded-lg flex items-center justify-center text-xl font-semibold flex-shrink-0;
 }
 
 .attendance-option.present .attendance-option-icon {
@@ -632,15 +633,15 @@ body {
 
 /* Texte des options */
 .attendance-option-text {
-  @apply flex-1;
+  @apply flex-1 min-w-0;
 }
 
 .attendance-option-title {
-  @apply font-semibold text-base;
+  @apply font-semibold text-base mb-1;
 }
 
 .attendance-option-description {
-  @apply text-sm text-gray-600;
+  @apply text-sm text-gray-600 leading-snug;
 }
 
 /* Overlay pour fermer le menu */
@@ -669,16 +670,21 @@ body {
   }
   
   .attendance-option {
-    @apply py-4 text-base;
+    @apply py-5 px-6;
     font-size: 1rem !important;
+    min-height: 80px;
   }
   
   .attendance-option-icon {
-    @apply w-6 h-6;
+    @apply w-12 h-12 text-2xl;
   }
   
   .attendance-option-title {
-    @apply text-base font-semibold;
+    @apply text-lg font-semibold mb-1;
+  }
+  
+  .attendance-option-description {
+    @apply text-base;
   }
 }
 
