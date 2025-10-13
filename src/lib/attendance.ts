@@ -1,5 +1,7 @@
 // Système de gestion des données d'appel avec Supabase
 import { supabase } from './supabase';
+import { sendAbsenceSMSAction } from '@/app/actions/attendance';
+
 export interface AttendanceRecord {
   date: string;
   class_id: string;
@@ -23,6 +25,40 @@ export interface AttendanceSession {
 }
 
 const STORAGE_KEY = 'cscbm_attendance_data';
+
+// Envoyer les SMS d'absence aux parents via Server Action
+async function sendAbsenceSMSNotifications(session: AttendanceSession): Promise<void> {
+  try {
+    console.log('📞 [CLIENT] Appel de la Server Action pour envoi SMS...');
+    
+    // Appeler la Server Action (exécution côté serveur)
+    const result = await sendAbsenceSMSAction(session);
+    
+    if (result.success) {
+      console.log(`✅ [CLIENT] SMS envoyés avec succès: ${result.sent} envoyés, ${result.failed} échoués`);
+      
+      // Afficher un message à l'utilisateur
+      if (result.sent > 0) {
+        alert(`✅ ${result.sent} SMS d'absence envoyé(s) aux parents !`);
+      }
+      if (result.failed > 0) {
+        console.warn(`⚠️ ${result.failed} SMS n'ont pas pu être envoyés`);
+      }
+    } else {
+      console.error('❌ [CLIENT] Erreur lors de l\'envoi des SMS:', result.error);
+      
+      // Afficher l'erreur à l'utilisateur
+      if (result.error) {
+        alert(`⚠️ Erreur lors de l'envoi des SMS: ${result.error}`);
+      }
+    }
+    
+  } catch (error) {
+    console.error('❌ [CLIENT] Erreur lors de l\'appel à la Server Action:', error);
+    alert('⚠️ Erreur lors de l\'envoi des SMS. Vérifiez la console pour plus de détails.');
+    // On ne bloque pas la sauvegarde si l'envoi de SMS échoue
+  }
+}
 
 // Sauvegarder une session d'appel complète (avec Supabase)
 export async function saveAttendanceSession(session: AttendanceSession): Promise<void> {
@@ -59,6 +95,10 @@ export async function saveAttendanceSession(session: AttendanceSession): Promise
     }
 
     console.log('Session d\'appel sauvegardée avec succès dans Supabase');
+    
+    // 📱 Envoyer les SMS d'absence aux parents
+    await sendAbsenceSMSNotifications(session);
+    
   } catch (error) {
     console.warn('Erreur Supabase, fallback localStorage:', error);
     return saveAttendanceSessionLocal(session);

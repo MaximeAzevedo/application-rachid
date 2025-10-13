@@ -541,6 +541,12 @@ export default function ClassAttendancePage() {
   const handleSaveAttendance = async () => {
     if (!classInfo) return;
     
+    console.log('📋 Informations de la classe:', classInfo);
+    console.log('👥 Statuts des étudiants:', students.map(s => ({
+      nom: `${s.first_name} ${s.last_name}`,
+      statut: s.status
+    })));
+    
     // Créer une session d'appel avec la date actuelle
     const session: AttendanceSession = {
       id: `session-${new Date().toISOString().split('T')[0]}-${classInfo.id}`,
@@ -555,6 +561,8 @@ export default function ClassAttendancePage() {
         note: student.note
       }))
     };
+    
+    console.log('💾 Session à sauvegarder:', session);
     
     try {
       // Sauvegarder la session de manière asynchrone
