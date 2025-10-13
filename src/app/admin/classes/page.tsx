@@ -391,12 +391,42 @@ export default function AdminClassesPage() {
   if (loading) {
     return (
       <div className="page-layout">
-        <div className="main-content flex items-center justify-center">
-          <div className="text-center">
-            <div className="loading-modern mb-4"></div>
-            <p className="text-gray-600 text-lg">Chargement des classes...</p>
+        <Header
+          title="Gestion des Classes"
+          subtitle="Chargement..."
+          showBackButton={true}
+          type="dashboard"
+        />
+        <main className="main-content">
+          <div className="container-modern">
+            {/* Skeleton avec animations fluides */}
+            <div className="mb-6 flex justify-end">
+              <div className="h-12 w-48 bg-gray-200 rounded-xl animate-pulse"></div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="card-premium">
+                  <div className="animate-pulse">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="h-8 w-24 bg-gray-200 rounded-lg"></div>
+                      <div className="flex gap-2">
+                        <div className="h-10 w-10 bg-gray-200 rounded-lg"></div>
+                        <div className="h-10 w-10 bg-gray-200 rounded-lg"></div>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="h-6 w-3/4 bg-gray-200 rounded"></div>
+                      <div className="h-4 w-1/2 bg-gray-200 rounded"></div>
+                      <div className="h-4 w-2/3 bg-gray-200 rounded"></div>
+                      <div className="h-4 w-1/3 bg-gray-200 rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </main>
       </div>
     );
   }

@@ -105,9 +105,10 @@ export default function DashboardPage() {
           {/* Section principale - Boutons d'action */}
           <div className="grid-responsive cols-3 gap-6">
             {/* Bouton Faire mon cours */}
-            <div 
-              className="card-premium interactive cursor-pointer group hover:scale-105 transition-all duration-200"
-              onClick={() => router.push('/courses')}
+            <Link 
+              href="/courses"
+              prefetch={true}
+              className="card-premium interactive cursor-pointer group hover:scale-105 transition-all duration-200 block"
             >
               <div className="flex flex-col items-center text-center p-8">
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-200">
@@ -123,12 +124,13 @@ export default function DashboardPage() {
                   Sélectionner une classe pour gérer votre cours
                 </p>
               </div>
-            </div>
+            </Link>
 
             {/* Gérer Élèves */}
-            <div 
-              className="card-premium interactive cursor-pointer group hover:scale-105 transition-all duration-200"
-              onClick={() => router.push('/admin/students')}
+            <Link 
+              href="/admin/students"
+              prefetch={true}
+              className="card-premium interactive cursor-pointer group hover:scale-105 transition-all duration-200 block"
             >
               <div className="flex flex-col items-center text-center p-8">
                 <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-200">
@@ -147,12 +149,13 @@ export default function DashboardPage() {
                   Consulter l&apos;historique des présences et les notes pédagogiques
                 </p>
               </div>
-            </div>
+            </Link>
 
             {/* Gérer Classes */}
-            <div 
-              className="card-premium interactive cursor-pointer group hover:scale-105 transition-all duration-200"
-              onClick={() => router.push('/admin/classes')}
+            <Link 
+              href="/admin/classes"
+              prefetch={true}
+              className="card-premium interactive cursor-pointer group hover:scale-105 transition-all duration-200 block"
             >
               <div className="flex flex-col items-center text-center p-8">
                 <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-200">
@@ -168,7 +171,7 @@ export default function DashboardPage() {
                   Créer et organiser vos classes
                 </p>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </main>
