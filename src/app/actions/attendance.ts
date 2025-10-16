@@ -4,8 +4,7 @@
 // Ces fonctions s'exécutent côté serveur et ont accès aux variables d'environnement
 
 import { sendBulkAbsenceSMS, type SMSNotification } from '@/lib/sms';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { createClient } from '@/lib/supabase-server';
 
 export interface AttendanceSession {
   id: string;
@@ -47,27 +46,7 @@ export async function sendAbsenceSMSAction(session: AttendanceSession): Promise<
     }
     
     // 🔒 Créer un client Supabase authentifié côté serveur
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return cookieStore.getAll();
-          },
-          setAll(cookiesToSet) {
-            try {
-              cookiesToSet.forEach(({ name, value, options }) =>
-                cookieStore.set(name, value, options)
-              );
-            } catch {
-              // Ignorer les erreurs de cookies en lecture seule
-            }
-          },
-        },
-      }
-    );
+    const supabase = await createClient();
     
     // Vérifier l'authentification
     const { data: { user }, error: authError } = await supabase.auth.getUser();
