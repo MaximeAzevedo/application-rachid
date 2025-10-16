@@ -1,15 +1,7 @@
 // Client Supabase pour le côté client avec gestion des cookies
 import { createBrowserClient } from '@supabase/ssr'
-import type { SupabaseClient } from '@supabase/supabase-js'
-
-// Singleton pour éviter de recréer le client à chaque fois
-let client: SupabaseClient | undefined
 
 export function createClient() {
-  if (client) {
-    return client;
-  }
-
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   
@@ -20,12 +12,7 @@ export function createClient() {
     throw new Error('Variables d\'environnement Supabase non configurées');
   }
   
-  console.log('🔐 Création client Supabase (une seule fois):', {
-    url: url.substring(0, 30) + '...',
-    keyLength: key.length
-  });
-  
-  client = createBrowserClient(url, key, {
+  return createBrowserClient(url, key, {
     cookies: {
       get(name: string) {
         if (typeof document === 'undefined') return undefined;
@@ -45,7 +32,5 @@ export function createClient() {
       }
     }
   });
-  
-  return client;
 }
 
