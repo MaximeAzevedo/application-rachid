@@ -183,10 +183,12 @@ Pour plus de détails, consultez `TWILIO_CONFIGURATION.md`
 Quand vous déployez sur Vercel, ajoutez ces 3 variables :
 
 ```bash
-TWILIO_ACCOUNT_SID=AC72dfbd3a74467f8faea6304e326b0ee7
-TWILIO_AUTH_TOKEN=4a4bbb719091719dc7e91bb3d2e0b723
-TWILIO_PHONE_NUMBER=+33939036597
+TWILIO_ACCOUNT_SID=votre_account_sid_ici
+TWILIO_AUTH_TOKEN=votre_auth_token_ici
+TWILIO_PHONE_NUMBER=votre_numero_twilio_ici
 ```
+
+⚠️ **ATTENTION** : Ne jamais commiter vos vraies clés Twilio dans Git !
 
 ---
 

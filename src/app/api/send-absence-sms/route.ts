@@ -1,11 +1,60 @@
 // API Route: Envoi de SMS pour les absences
 // POST /api/send-absence-sms
+// ⚠️ ROUTE PROTÉGÉE - Authentification Supabase requise
 
 import { NextRequest, NextResponse } from 'next/server';
 import { sendAbsenceSMS, sendBulkAbsenceSMS, type SMSNotification } from '@/lib/sms';
+import { createClient } from '@supabase/supabase-js';
 
 export async function POST(request: NextRequest) {
   try {
+    // 🔒 VÉRIFICATION AUTHENTIFICATION
+    const authHeader = request.headers.get('authorization');
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: 'Non autorisé - Token manquant' },
+        { status: 401 }
+      );
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+    
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: {
+        headers: {
+          Authorization: authHeader,
+        },
+      },
+    });
+
+    // Vérifier que le token est valide
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: 'Non autorisé - Token invalide' },
+        { status: 401 }
+      );
+    }
+
+    // Vérifier que l'utilisateur est admin ou teacher
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (!profile || !['admin', 'teacher'].includes(profile.role)) {
+      return NextResponse.json(
+        { error: 'Non autorisé - Privilèges insuffisants' },
+        { status: 403 }
+      );
+    }
+
+    // ✅ Utilisateur authentifié et autorisé
     const body = await request.json();
     
     // Vérifier si c'est un envoi unique ou multiple

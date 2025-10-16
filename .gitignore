@@ -50,4 +50,13 @@ temp_file
 coverage/
 
 # NYC test coverage
-.nyc_output 
+.nyc_output
+
+# Documentation avec credentials (ne jamais commit)
+**/GUIDE_DEMARRAGE_SMS.md
+**/INFOS_TWILIO_A_FOURNIR.md
+**/TWILIO_CONFIGURATION.md
+**/TEST_SMS.md
+**/VERIFICATION_SMS.md
+**/RESUME_SYSTEME_SMS.md
+**/IMPORT_SMS_COMPLET.md 
