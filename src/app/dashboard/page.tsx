@@ -29,13 +29,22 @@ export default function DashboardPage() {
       try {
         console.log('🔄 Début chargement dashboard...');
         
+        // Vérifier la session d'abord
+        const { data: { session } } = await supabase.auth.getSession();
+        console.log('🔑 Session active:', session ? '✅' : '❌', session?.user?.email);
+        
         // Charger les classes
         const { data: classesData, error: classesError } = await supabase
           .from('classes')
           .select('*')
           .order('class_name');
         
-        console.log('📊 Classes chargées:', classesData?.length, 'Erreur:', classesError);
+        console.log('📊 Classes chargées:', {
+          count: classesData?.length,
+          hasError: !!classesError,
+          error: classesError,
+          errorDetails: classesError ? JSON.stringify(classesError) : null
+        });
 
         if (classesError) {
           console.error('Erreur chargement classes:', classesError);
