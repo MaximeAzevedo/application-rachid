@@ -4,7 +4,8 @@
 // Ces fonctions s'exécutent côté serveur et ont accès aux variables d'environnement
 
 import { sendBulkAbsenceSMS, type SMSNotification } from '@/lib/sms';
-import { supabase } from '@/lib/supabase';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
 
 export interface AttendanceSession {
   id: string;
@@ -45,8 +46,49 @@ export async function sendAbsenceSMSAction(session: AttendanceSession): Promise<
       return { success: true, sent: 0, failed: 0 };
     }
     
+    // 🔒 Créer un client Supabase authentifié côté serveur
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options)
+              );
+            } catch {
+              // Ignorer les erreurs de cookies en lecture seule
+            }
+          },
+        },
+      }
+    );
+    
+    // Vérifier l'authentification
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
+      console.error('❌ [SERVER ACTION] Utilisateur non authentifié:', authError);
+      return {
+        success: false,
+        sent: 0,
+        failed: absentStudents.length,
+        error: 'Utilisateur non authentifié'
+      };
+    }
+    
+    console.log('🔐 [SERVER ACTION] Client Supabase authentifié pour:', user.email);
+    
     // Récupérer les numéros de téléphone des parents depuis Supabase
     const studentIds = absentStudents.map(s => s.student_id);
+    
+    console.log('📋 [SERVER ACTION] Recherche des numéros pour:', studentIds);
+    
     const { data: studentsData, error } = await supabase
       .from('students')
       .select('id, first_name, last_name, parent_phone')
@@ -61,6 +103,13 @@ export async function sendAbsenceSMSAction(session: AttendanceSession): Promise<
         error: 'Erreur lors de la récupération des numéros de téléphone'
       };
     }
+    
+    console.log('📞 [SERVER ACTION] Données récupérées:', studentsData?.length || 0, 'élève(s)');
+    console.log('📊 [SERVER ACTION] Détails:', studentsData?.map(s => ({
+      id: s.id,
+      nom: `${s.first_name} ${s.last_name}`,
+      tel: s.parent_phone ? '✅' : '❌'
+    })));
     
     // Préparer les notifications SMS
     const smsNotifications: SMSNotification[] = [];
