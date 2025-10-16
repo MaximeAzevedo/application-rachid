@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { REAL_CLASSES_DATA } from '@/data/classes';
 import { Edit3, Users, FileText, Trash2, Plus, X } from 'lucide-react';
 import { Header } from '@/components/ui/Header';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase-client';
 
 interface Class {
   id: string;
@@ -188,6 +188,7 @@ function ClassModal({
 }
 
 export default function AdminClassesPage() {
+  const supabase = createClient();
   const [classes, setClasses] = useState<Class[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);

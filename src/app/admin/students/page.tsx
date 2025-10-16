@@ -27,7 +27,7 @@ import {
   type PedagogicalNote,
   type CreateNoteData
 } from '@/lib/pedagogical-notes';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase-client';
 
 interface Student {
   id: string;
@@ -727,6 +727,7 @@ function AddStudentModal({
 }
 
 export default function AdminStudentsPage() {
+  const supabase = createClient();
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);

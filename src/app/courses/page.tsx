@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { REAL_CLASSES_DATA } from '@/data/classes';
 import { Header } from '@/components/ui/Header';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase-client';
 
 export default function CoursesPage() {
   const { user, loading } = useAuth();
   const [classes, setClasses] = useState(REAL_CLASSES_DATA);
   const router = useRouter();
+  const supabase = createClient();
 
   useEffect(() => {
     if (!loading && !user) {

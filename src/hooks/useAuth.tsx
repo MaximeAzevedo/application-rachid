@@ -30,14 +30,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const loadSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        console.log('🔄 Chargement session...');
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        console.log('📦 Session récupérée:', {
+          hasSession: !!session,
+          hasUser: !!session?.user,
+          userEmail: session?.user?.email,
+          error: sessionError
+        });
         
         if (session?.user) {
-          const { data: profile } = await supabase
+          console.log('👤 Chargement profil utilisateur...');
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', session.user.id)
             .single();
+
+          console.log('📋 Profil récupéré:', {
+            hasProfile: !!profile,
+            email: profile?.email,
+            error: profileError
+          });
 
           if (profile) {
             setUser({
@@ -46,12 +61,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               full_name: profile.full_name || 'Utilisateur',
               role: profile.role || 'teacher'
             });
+            console.log('✅ Utilisateur connecté:', profile.email);
+          } else {
+            console.warn('⚠️ Profil non trouvé pour:', session.user.email);
           }
+        } else {
+          console.log('ℹ️ Aucune session active');
         }
       } catch (error) {
-        console.error('Erreur session:', error);
+        console.error('❌ Erreur session:', error);
       } finally {
         // TOUJOURS terminer le loading
+        console.log('✅ Chargement terminé');
         setLoading(false);
       }
     };

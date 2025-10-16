@@ -8,7 +8,7 @@ import { saveAttendanceSession, type AttendanceSession } from '@/lib/attendance'
 import { savePedagogicalNote, getStudentPedagogicalNotes, updatePedagogicalNote, deletePedagogicalNote, type CreateNoteData, type PedagogicalNote } from '@/lib/pedagogical-notes';
 import { Header } from '@/components/ui/Header';
 import { AttendanceContextMenu } from '@/components/ui/AttendanceContextMenu';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase-client';
 
 interface Student {
   id: string;
@@ -301,6 +301,7 @@ function PedagogicalNoteModal({
 }
 
 export default function ClassAttendancePage() {
+  const supabase = createClient();
   const [classInfo, setClassInfo] = useState<Class | null>(null);
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);

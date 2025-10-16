@@ -6,13 +6,15 @@ import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { REAL_CLASSES_DATA } from '@/data/classes';
 import { Header } from '@/components/ui/Header';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase-client';
 
 export default function DashboardPage() {
   const { user, profile, loading, signOut } = useAuth();
   const [classes, setClasses] = useState(REAL_CLASSES_DATA);
   const [totalStudents, setTotalStudents] = useState(0);
+  const [dataLoading, setDataLoading] = useState(true);
   const router = useRouter();
+  const supabase = createClient();
 
   useEffect(() => {
     if (!loading && !user) {
@@ -23,12 +25,17 @@ export default function DashboardPage() {
   // Charger les classes et étudiants depuis Supabase
   useEffect(() => {
     const loadDashboardData = async () => {
+      setDataLoading(true);
       try {
+        console.log('🔄 Début chargement dashboard...');
+        
         // Charger les classes
         const { data: classesData, error: classesError } = await supabase
           .from('classes')
           .select('*')
           .order('class_name');
+        
+        console.log('📊 Classes chargées:', classesData?.length, 'Erreur:', classesError);
 
         if (classesError) {
           console.error('Erreur chargement classes:', classesError);
@@ -52,6 +59,8 @@ export default function DashboardPage() {
             .from('students')
             .select('*', { count: 'exact', head: true });
 
+          console.log('👥 Étudiants comptés:', studentsCount, 'Erreur:', studentsError);
+
           if (studentsError) {
             console.error('Erreur chargement étudiants:', studentsError);
             setTotalStudents(REAL_CLASSES_DATA.reduce((total, c) => total + c.students.length, 0));
@@ -63,23 +72,29 @@ export default function DashboardPage() {
         console.error('Erreur lors du chargement des données dashboard:', error);
         setClasses(REAL_CLASSES_DATA);
         setTotalStudents(REAL_CLASSES_DATA.reduce((total, c) => total + c.students.length, 0));
+      } finally {
+        setDataLoading(false);
       }
     };
 
-    loadDashboardData();
-  }, []);
+    if (user) {
+      loadDashboardData();
+    }
+  }, [user]);
 
   const handleSignOut = async () => {
     await signOut();
     router.push('/login');
   };
 
-  if (loading || !user) {
+  if (loading || !user || dataLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100">
         <div className="text-center">
           <div className="loading-modern mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Chargement...</p>
+          <p className="text-muted-foreground font-medium">
+            {loading ? 'Vérification de la session...' : dataLoading ? 'Chargement des données...' : 'Chargement...'}
+          </p>
         </div>
       </div>
     );
