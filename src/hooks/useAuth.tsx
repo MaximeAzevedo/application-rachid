@@ -3,7 +3,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 
-// Types locaux simplifiés
 interface User {
   id: string;
   email: string;
@@ -26,30 +25,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Charger la session Supabase au démarrage
   useEffect(() => {
     const loadSession = async () => {
       try {
-        // Récupérer la session active
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        const { data: { session } } = await supabase.auth.getSession();
         
-        if (sessionError) {
-          console.error('Erreur chargement session:', sessionError);
-          setLoading(false);
-          return;
-        }
-
         if (session?.user) {
-          // Charger le profil depuis la table profiles
-          const { data: profile, error: profileError } = await supabase
+          const { data: profile } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', session.user.id)
             .single();
 
-          if (profileError) {
-            console.error('Erreur chargement profil:', profileError);
-          } else if (profile) {
+          if (profile) {
             setUser({
               id: profile.id,
               email: profile.email,
@@ -59,20 +47,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         }
       } catch (error) {
-        console.error('Erreur lors du chargement de la session:', error);
+        console.error('Erreur session:', error);
       } finally {
+        // TOUJOURS terminer le loading
         setLoading(false);
       }
     };
 
     loadSession();
 
-    // Écouter les changements d'authentification
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event);
       
       if (session?.user) {
-        // Charger le profil
         const { data: profile } = await supabase
           .from('profiles')
           .select('*')
@@ -105,12 +92,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (error) {
-        console.error('Erreur de connexion:', error);
         return { error: new Error('Identifiants invalides') };
       }
 
       if (data.user) {
-        // Charger le profil
         const { data: profile } = await supabase
           .from('profiles')
           .select('*')
@@ -129,13 +114,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       return { error: null };
     } catch (error) {
-      console.error('Erreur signIn:', error);
       return { error: new Error('Erreur de connexion') };
     }
   };
 
   const signUp = async () => {
-    // Pour l'instant, pas d'inscription publique
     return { error: new Error('Inscription non disponible') };
   };
 
@@ -144,20 +127,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await supabase.auth.signOut();
       setUser(null);
     } catch (error) {
-      console.error('Erreur lors de la déconnexion:', error);
+      console.error('Erreur déconnexion:', error);
     }
   };
 
-  const value = {
-    user,
-    profile: user,
-    loading,
-    signIn,
-    signOut,
-    signUp,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, profile: user, loading, signIn, signOut, signUp }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
@@ -166,4 +144,4 @@ export function useAuth() {
     throw new Error('useAuth doit être utilisé dans un AuthProvider');
   }
   return context;
-} 
+}
