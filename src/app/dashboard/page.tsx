@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { REAL_CLASSES_DATA } from '@/data/classes';
 import { Header } from '@/components/ui/Header';
